@@ -1,0 +1,17 @@
+cd exercise_1
+g++ -std=c++11 main.cpp
+./a.out
+
+cd exercise_
+g++ -std=c++11 main.cpp
+./a.out
+(en este ejercisio hay que interactuar con el menu)
+
+
+cd exercise_3
+g++ -std=c++11 main.cpp
+./a.out
+
+cd exersice_4
+g++ -std=c++11 main.cpp
+./a.out
