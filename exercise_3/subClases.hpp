@@ -2,21 +2,51 @@
 #include <iomanip>
 #include <string>
 using namespace std;
+#include "number.hpp"
 
-class Number{//clase abstracta pura o intefaz porque todos sus metodos son virtuales puros.
+
+class Real: public Number{
+    private:
+        double number;
     public: 
-       //operaciones pedidas
-        virtual ~Number()=0;//destructor, no se declara nada para que number sea una interfaz y obkiga a las clases derivadas a poner su destructor.
-        virtual string toString()=0;//la igualo a 0 para hcerla una clase virtual pura, o abstracta. Si no la igualo a 0 y hago que retorne un string, todas las clases derivadas de esta debrian sobreescribirla.
-       //el virtual hace que las clases que deriven de esta obligatoriamente implementen este método sobreescribiendolo. 
-        virtual void sum( const Number& num)=0;
-        virtual void substract(const Number& num)=0;
-        virtual void multiply(const Number& num)=0;
-        virtual void divide(const Number& num)=0;
+        Real(){
+            number = 0;
+        }
+        Real(double num){
+            number = num;
+        }
+        ~Real(){
+            cout << "Real destructor" << endl;
+        }
+        void setNumber(double num){
+            number = num;
+        }
+        //metodos pedidos
+        string toString()override{
+            string num = to_string(number);
+            return num;
+        }
+        void sum(const Number& num)override{
+            const Real& real = dynamic_cast<const Real&>(num);
+            number = number + real.number;
+        }
+        void substract(const Number& num) override{
+            const Real& real = dynamic_cast<const Real&>(num);
+            number = number - real.number;
+        }
+        void multiply(const Number& num)override{
+            const Real& real = dynamic_cast<const Real&>(num);
+            number = number * real.number;
+            
+        }
+        void divide(const Number& num)override{
+            const Real& real = dynamic_cast<const Real&>(num);
+            if(real.number == 0){
+                cout << "A number can´t be divided by 0. " << endl;
+            }else{
+                number = number / real.number;
+            }}        
 };
-Number::~Number() {
-    cout << "Number destructor" << endl;
-}//ASe debe definir el destructor de la clase abstracta pura. Como la clase es abstracta pura, no se puede definir dentro de la clase. 
 
 class Whole: public Number {
     private: 
@@ -61,48 +91,7 @@ class Whole: public Number {
             }
         }
     };
-class Real: public Number{
-    private:
-        double number;
-    public: 
-        Real(){
-            number = 0;
-        }
-        Real(double num){
-            number = num;
-        }
-        ~Real(){
-            cout << "Real destructor" << endl;
-        }
-        void setNumber(double num){
-            number = num;
-        }
-        //metodos pedidos
-        string toString()override{
-            string num = to_string(number);
-            return num;
-        }
-        void sum(const Number& num)override{
-            const Real& real = dynamic_cast<const Real&>(num);
-            number = number + real.number;
-        }
-        void substract(const Number& num) override{
-            const Real& real = dynamic_cast<const Real&>(num);
-            number = number - real.number;
-        }
-        void multiply(const Number& num)override{
-            const Real& real = dynamic_cast<const Real&>(num);
-            number = number * real.number;
-            
-        }
-        void divide(const Number& num)override{
-            const Real& real = dynamic_cast<const Real&>(num);
-            if(real.number == 0){
-                cout << "A number can´t be divided by 0. " << endl;
-            }else{
-                number = number / real.number;
-            }}        
-};
+
 class Complex: public Number{
     private: 
         pair <double,double> number;
@@ -165,42 +154,3 @@ class Complex: public Number{
             }
         }
     };
-
-int main(){
-    Whole whole; 
-    Whole wholeSuMult(2);
-    Whole wholeSubs(3);
-    Whole wholeDiv(4);
-    whole.setNumber(11);
-    whole.sum(wholeSuMult);
-    whole.substract(wholeSubs);
-    whole.multiply(wholeSuMult);
-    whole.divide(wholeDiv);
-    cout << "TEST: Whole number operations, it should print 5: " << whole.toString() << endl;
-
-    Real real;
-    real.setNumber(11.5);
-    Real realSuMult(2);
-    Real realSubs(3);
-    Real realDiv(4);
-    real.sum(realSuMult);
-    real.substract(realSubs);  
-    real.multiply(realSuMult);
-    real.divide(realDiv);
-    cout << "TEST: Real number operations, it should print 5.25: " << real.toString() << endl;
-
-    Complex complex(11.5,2);
-    Complex multiplication(2,2);
-    Complex division(4,4);
-    Complex sum(2,1);
-    Complex subs(3,1);
-
-
-    complex.sum(sum);
-    complex.substract(subs);
-    complex.multiply(multiplication);
-    complex.divide(division);
-    //hice cuenta en el aire hacer bien
-    cout << "TEST: Complex number operations, it should print 5.25 + 1 i: " << complex.toString() << endl;
-
-};
